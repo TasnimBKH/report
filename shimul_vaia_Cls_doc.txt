@@ -1,0 +1,52 @@
+/*SELECT t.*, T.rowid FROM cor_fxdast_param_trans_tmpl t;
+
+
+
+SELECT t.*, T.rowid FROM cor_fxdast_param_trans_amt t;
+select t.* from rpt_config_mast t, sys_app_function f where f.function_id=t.function_id and f.fast_path_no='6001';
+--rsp_nbdc_tc2
+select t.* from rtl_time_param t;
+select t.* from rtl_time_intreg t order by t.product_id
+,t.function_id;
+--bu_cb_org_type*/
+select substr(t.account_number, 1, 3) as prod_id,
+sum(t.current_balance_lcy) as balance,
+count(t.account_number) as tot_acc
+from rtl_time_ac_mast_hist t
+where t.branch_id = '0011'
+and t.trans_date = '31-may-2022'
+and t.acc_status <> 'C'
+group by substr(t.account_number, 1, 3);
+select t.current_balance_lcy as balance, t.*
+from cor_glmaster_hist t
+where t.trans_dt = '31-may-2022'
+and t.serial = 0
+and t.gl_branch_id = '0011'
+and t.gl_acc_sl = '90200000024';
+select 63599090.59 - 63599090.59 from dual;
+select t.trans_dt, t.dr_cr, t.amount_lcy, t.balance_lcy, t.narration, t.*
+from cor_trans_gl_hist t
+where t.branch_id = '0011'
+and t.gl_acc_sl = '90200000024'
+order by t.trans_dt, t.tracer_no;
+select t.trans_dt,
+sum(decode(t.dr_cr, 'D', t.amount_lcy, 0)) as tot_dr,
+sum(decode(t.dr_cr, 'C', t.amount_lcy, 0)) as tot_cr
+from cor_trans_client_hist t
+where t.branch_id = '0011'
+and t.trans_dt = '19-sep-2021'
+and mis_lib.fxn_get_rev_flag_client(t.branch_id,
+t.trans_dt,
+t.batch_no,
+t.tracer_no) = 0
+group by t.trans_dt
+order by t.trans_dt;
+
+
+
+select t.* from cor_lon_prod_rule t;
+select t.* from cor_glchart t where t.gl_acc_no = '90203080100';
+select l.gl_link_type_nm, t.*
+from cor_lon_prod_gl_link t, bu_lon_gl_link_type l
+where t.gl_link_id = l.gl_link_type_id
+order by t.product_id,t.gl_link_id;
